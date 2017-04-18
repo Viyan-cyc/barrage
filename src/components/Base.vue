@@ -10,6 +10,7 @@
   import '../ccl/ccl.min.css';
 
   import CCL from '../ccl/CommentCoreLibrary';
+  import io from '../../lib/socket.io';
 
   export default {
   // data() {
@@ -26,6 +27,14 @@
       CM.init();
       CM.start();
       window.CM = CM;
+      this.httpServer = io.connect('http://192.168.1.103:3002');
+      this.httpServer.on('danmaku show', (msg) => {
+          console.log(msg);
+          const node = document.createElement('LI');
+          document.getElementById('messages').appendChild(node.text(msg));
+          const danmaku = JSON.parse(msg);
+          CM.send(danmaku);
+      });
       console.log('123');
     },
   },
